@@ -1,35 +1,27 @@
-document.getElementById('generate').addEventListener('click', () => {
-    const diet = document.getElementById('diet').value;
-    const cuisine = document.getElementById('cuisine').value;
-    const servings = document.getElementById('servings').value;
+document.getElementById("myForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-    // Construct the API URL
-    // This example uses Recipe Puppy; adjust as necessary for your chosen API
-    let apiUrl = `http://www.recipepuppy.com/api/?i=${diet}&q=${cuisine}`;
+    const formData = new FormData(this);
+    const data = {};
 
-    // Fetch recipes from the API
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Display the first result for simplicity
-            // Adjust based on the API's response structure
-            displayMealPlan(data.results[0]);
-        })
-        .catch(error => {
-            console.error('Error fetching recipes:', error);
-        });
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    fetch('https://https://lpsxfflmyvgagrhzdjgs.supabase.co.supabase.co/rest/v1/UserResponses', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxwc3hmZmxteXZnYWdyaHpkamdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDMwOTYzNzgsImV4cCI6MjAxODY3MjM3OH0.azuRgd-k94VxWTwxWU8LzlLa5ID4FHVdPg18uIB1kPE'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Data sent successfully:', data);
+        // You can add further handling or redirection here if needed.
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 });
-
-function displayMealPlan(recipe) {
-    const planDiv = document.getElementById('meal-plan');
-    planDiv.innerHTML = `
-        <h2>${recipe.title}</h2>
-        <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
-        <a href="${recipe.href}" target="_blank">View Recipe</a>
-    `;
-}
-
-// Display a default meal plan on initial load (optional)
-window.onload = () => {
-    // Call your API or display a default meal plan
-};
